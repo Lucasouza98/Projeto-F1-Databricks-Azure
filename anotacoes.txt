@@ -1,0 +1,74 @@
+anotações curso
+-> ao criar databricks no portal azure, automaticamente é criado
+* databricks notebook
+* datalake 
+* netrorkWatcher -> região
+* workers
+* vnet
+
+data plane -> vnet, blob storage, dtabricks workspace
+control plane -> databricks cluster, databricks UX, DBFS
+
+display(dbutils.fs.ls('dbfs:/')) -> listar dbfs existentes
+
+para controlar acessos a usuario deve-se atentar ao azure directory AD, configurar para receber o databricks isso implica na configuração do Databricks para o Azure, liberando permissão para o databricks conseguir escrever e modificar os dados no datalake
+
+- Acessar Azure AD
+- New register (databricks-service-app)
+- registrar
+- copiar Application clientId e directoryId TenantID salvar em um notepad
+- Acessar Certificates e Secretes -> New cliente secret
+- Colocar a descrição (databricks-acces-secret) expires 3 month
+- Add
+- copiar o token gerado no value e salvar
+- ir em datalake IAM(access control)
+- add role assignment
+- role: Storage blob data contribuitor
+- select: databricks-service-app -> criado no passo "new register"
+
+
+Application (client) ID:229f8ee3-25c4-453b-95d0-4da20dbb0872
+Object ID:97ab81ce-692e-4414-8dac-100934f6898f
+Directory (tenant) ID:6b608f53-c5f3-45e4-9ba9-7c62b9cdba8d
+databricks-acces-secret:PL18Q~txrmBuhygP8ORMQ546WJOE87H6BwQwEbpf
+
+/subscriptions/e1b4fc30-5958-4f94-b314-8d5664a0d531/resourceGroups/rg-databricks-course-f1/providers/Microsoft.Storage/storageAccounts/saprojectformula1course
+
+
+
+storage_account_name = "saprojectformula1course"
+client_id            = "229f8ee3-25c4-453b-95d0-4da20dbb0872"
+tenant_id            = "6b608f53-c5f3-45e4-9ba9-7c62b9cdba8d"
+client_secret        = "PL18Q~txrmBuhygP8ORMQ546WJOE87H6BwQwEbpf"
+
+
+É criado key-vault para esconder as chaves de acesso do databricks -> Azure AD
+Ir em key vault
+Criar um novo recurso
+Acessar recurso
+Clsiar em acess
+generate key
+
+ESSES VALORES FORAM OS SETADOS NO DATABRICKS E CRIADOS NO AZURE AD
+databricks-keyvault-clientsecret
+PL18Q~txrmBuhygP8ORMQ546WJOE87H6BwQwEbpf
+databricks-keyvault-tenantid
+6b608f53-c5f3-45e4-9ba9-7c62b9cdba8d
+databricks-keyvault-clienteid
+229f8ee3-25c4-453b-95d0-4da20dbb0872
+
+acessar a home page do databricks princial e inserir no final da URL /secrets/createScope
+https://adb-1416169599513403.3.azuredatabricks.net/?o=1416169599513403#secrets/createScope
+
+DNS Name no databricks é preenchido com o valor do PROPERTIES->KEYVAULT Vault URI
+Resource ID no databricks é preenchido com o valor do PROPERTIES->KEYVAULT Resource ID
+
+
+consumo API Formula01
+http://ergast.com/mrd/
+
+Arquitetura Azure
+https://docs.microsoft.com/pt-br/azure/architecture/
+
+Process redução de carga 
+https://databricks.com/blog/2020/08/18/how-to-accelerate-your-etl-pipelines-from-18-hours-to-as-fast-as-5-minutes-with-azure-databricks.html
